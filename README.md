@@ -4,7 +4,7 @@
 
 **Swipeable**, **Animated**, **Compact** - Bottom sheet for react native project.
 
-<img src="https://github.com/postmelee/react-native-animated-bottom-sheet/blob/main/gif/gif1.gif?raw=true" width="400" height="750" />
+<img src="https://github.com/postmelee/react-native-animated-bottom-sheet/blob/main/gif/gif1.gif?raw=true" width="180" height="320" />
 
 ## ⚡️ Features
 - **Swipeable:** swipe down or up to handle component.
