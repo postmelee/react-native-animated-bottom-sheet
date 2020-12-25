@@ -29,6 +29,7 @@ interface IState {
 
 const windowHeight = Dimensions.get("window").height;
 
+// boolean 값 하나로 가능 (renderContent에 setBoolean 넘기고 modal visible은 내부 state로 애니매이션 후 설정)
 export default class BottomSheet extends Component<IProps, IState> {
   private SNAP_POINTS_FROM_TOP: number[];
   private _backgroundOpacity: Animated.Value;
