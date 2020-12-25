@@ -69,11 +69,10 @@ export default App
  Shows the bottom sheet to `value` with Animation. 
  - **`value:`** The value that the bottom sheet will move to(px from the bottom of the window)
 > **Note:** Calling `show()` without any parameter will show the bottom sheet to `visibleHeight`
----
+
 ### `close()`
 Closes the bottom sheet to bottom with Animation.
 
----
 ## ✏️  Todo
 - [ ] Add callback to `close`
 
