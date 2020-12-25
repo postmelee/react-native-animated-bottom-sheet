@@ -14,17 +14,14 @@ import {
 } from "react-native-gesture-handler";
 
 interface IProps {
-  closeBottomSheet: boolean;
-  setCloseBottomSheet: (value: boolean) => void;
-  isModalVisible: boolean;
-  setIsModalVisible: (value: boolean) => void;
-  renderContent: (disabled: boolean) => any;
+  renderContent: (onSwipe: boolean) => any;
   visibleHeight: number;
 }
 
 interface IState {
   lastSnap: number;
-  disabled: boolean;
+  isVisible: boolean;
+  onSwipe: boolean;
 }
 
 const windowHeight = Dimensions.get("window").height;
@@ -54,7 +51,8 @@ export default class BottomSheet extends Component<IProps, IState> {
 
     this.state = {
       lastSnap: START,
-      disabled: false,
+      isVisible: false,
+      onSwipe: false,
     };
     this._backgroundOpacity = new Animated.Value(0);
 
@@ -90,22 +88,27 @@ export default class BottomSheet extends Component<IProps, IState> {
     this._translateY.addListener(({ value }: any) => {
       this._backgroundOpacity.setValue(value);
     });
+
+    this.open = this.open.bind(this);
+    this.close = this.close.bind(this);
   }
 
-  _onHeaderHandlerStateChange = ({ nativeEvent }: any) => {
+  private _onHeaderHandlerStateChange = ({ nativeEvent }: any) => {
     if (nativeEvent.oldState === State.BEGAN) {
       this.setState({
-        disabled: true,
+        onSwipe: true,
       });
+      // this.props.onSwipeStart && this.props.onSwipeStart();
       this._lastScrollY.setValue(0);
     } else if (nativeEvent.state === 5) {
       this.setState({
-        disabled: false,
+        onSwipe: false,
       });
+      // this.props.onSwipeEnd && this.props.onSwipeEnd();
     }
     this._onHandlerStateChange({ nativeEvent });
   };
-  _onHandlerStateChange = ({ nativeEvent }: any) => {
+  private _onHandlerStateChange = ({ nativeEvent }: any) => {
     if (nativeEvent.oldState === State.ACTIVE) {
       let { velocityY, translationY } = nativeEvent;
       translationY -= this._lastScrollYValue;
@@ -132,40 +135,48 @@ export default class BottomSheet extends Component<IProps, IState> {
         useNativeDriver: true,
       }).start(() => {
         if (destSnapPoint === windowHeight) {
-          this.props.setIsModalVisible(false);
+          this.setState({
+            isVisible: false,
+          });
         }
       });
     }
   };
 
-  componentDidUpdate(prevState: IProps) {
-    if (!prevState.isModalVisible && this.props.isModalVisible) {
-      this._translateYOffset.setValue(windowHeight);
-      Animated.spring(this._translateYOffset, {
-        velocity: 0.01,
-        tension: 68,
-        friction: 12,
-        toValue: windowHeight - this.props.visibleHeight + 1,
-        useNativeDriver: true,
-      }).start();
-    }
-    if (this.props.closeBottomSheet) {
-      Animated.spring(this._translateYOffset, {
-        velocity: 40,
-        tension: 138,
-        friction: 12,
-        toValue: windowHeight,
-        useNativeDriver: true,
-      }).start(() => {
-        this.props.setCloseBottomSheet(false);
-        this.props.setIsModalVisible(false);
+  public open = (visibleHeight?: number, callback?: any) => {
+    this._translateYOffset.setValue(windowHeight);
+    this.setState(
+      {
+        isVisible: true,
+      },
+      () =>
+        Animated.spring(this._translateYOffset, {
+          velocity: 0.01,
+          tension: 68,
+          friction: 12,
+          toValue:
+            windowHeight - (visibleHeight || this.props.visibleHeight + 1),
+          useNativeDriver: true,
+        }).start(callback && callback())
+    );
+  };
+
+  public close = () => {
+    Animated.timing(this._translateYOffset, {
+      toValue: windowHeight,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => {
+      this.setState({
+        isVisible: false,
       });
-    }
-  }
+    });
+  };
+
   render() {
     return (
       <Modal
-        visible={this.props.isModalVisible}
+        visible={this.state.isVisible}
         transparent={true}
         style={{ flex: 1 }}
       >
@@ -179,7 +190,9 @@ export default class BottomSheet extends Component<IProps, IState> {
                 duration: 200,
                 useNativeDriver: true,
               }).start(() => {
-                this.props.setIsModalVisible(false);
+                this.setState({
+                  isVisible: false,
+                });
               });
             }}
           >
@@ -212,7 +225,7 @@ export default class BottomSheet extends Component<IProps, IState> {
                     onHandlerStateChange={this._onHeaderHandlerStateChange}
                   >
                     <Animated.View style={{ flex: 1 }}>
-                      {this.props.renderContent(this.state.disabled)}
+                      {this.props.renderContent(this.state.onSwipe)}
                     </Animated.View>
                   </PanGestureHandler>
                 </Animated.View>

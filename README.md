@@ -4,7 +4,6 @@
 
 **Swipeable**, **Animated**, **Compact** - Bottom sheet for react native project.
 
-<img src="https://cdn.nextgov.com/media/img/upload/2020/10/19/NGspace20201019/860x394.jpg">
 
 ## 🛠 Installation
 Open a Terminal in the project root and run:
