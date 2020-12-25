@@ -5,7 +5,7 @@
 **Swipeable**, **Animated**, **Compact** - Bottom sheet for react native project.
 
 
-## 🛠 Installation
+## 🛠  Installation
 Open a Terminal in the project root and run:
 ```sh
 npm i react-native-animated-bottom-sheet --save
@@ -15,10 +15,10 @@ Now we need to install [react-native-gesture-handler](https://github.com/softwar
 npm i react-native-gesture-handler --save
 ```
 
-## 📝 Requirements
+## 📝  Requirements
 - [react-native-gesture-handler](https://github.com/software-mansion/react-native-gesture-handler)
 
-## 🧬 Available Props
+## 🧬  Available Props
 |Name|Type|Require|Description|
 |---|---|---|---|
 |closeBottomSheet|`boolean`|`true`|Set to `true` if bottom sheet should close|
@@ -26,7 +26,7 @@ npm i react-native-gesture-handler --save
 |renderContent|`(disabled: boolean) => any`|`true`|Function that returns component to render in bottom sheet.|
 |visibleHeight|`number`|`true`|Visible height from bottom of the window.|
 
-## 🏗 Examples
+## 🏗  Examples
 ```tsx
 import BottomSheet from 'react-native-animated-bottom-sheet';
 import React, {useState} from 'react';
@@ -53,10 +53,10 @@ const App = () => {
 
 export default App
 ```
-## ✏️ Todo
+## ✏️  Todo
 - [ ] change props
 - [ ] add example image
 
-## ⚖️ License
+## ⚖️  License
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/postmelee/react-native-animated-bottom-sheet/blob/main/LICENSE) file for details
 
