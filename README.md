@@ -1,10 +1,17 @@
 # react-native-animated-bottom-sheet
-![npm-version](https://img.shields.io/npm/v/react-native-animated-bottom-sheet)
-![Download-status](https://img.shields.io/npm/dm/react-native-animated-bottom-sheet)
+[![npm-version](https://img.shields.io/npm/v/react-native-animated-bottom-sheet)](https://www.npmjs.com/package/react-native-animated-bottom-sheet)
+[![Download-status](https://img.shields.io/npm/dm/react-native-animated-bottom-sheet)](https://www.npmjs.com/package/react-native-animated-bottom-sheet)
+[![License](https://img.shields.io/npm/l/react-native-animated-bottom-sheet)](https://www.npmjs.com/package/react-native-animated-bottom-sheet)
+<br/>
+[![Github followers](https://img.shields.io/github/followers/postmelee?style=social)](https://github.com/postmelee)
+[![Repo Start](https://img.shields.io/github/stars/postmelee/react-native-animated-bottom-sheet?label=Repo%20Stars&style=social)](https://github.com/postmelee/react-native-animated-bottom-sheet)
+[![User stars](https://img.shields.io/github/stars/postmelee?affiliations=OWNER&label=User%20Stars&style=social)](https://github.com/postmelee)
 
 **Swipeable**, **Animated**, **Compact** - Bottom sheet for react native project.
 
 <img src="https://github.com/postmelee/react-native-animated-bottom-sheet/blob/main/gif/gif1.gif?raw=true" width="180" height="320" />
+
+---
 
 ## ⚡️ Features
 - **Swipeable:** swipe down or up to handle component.
@@ -12,6 +19,7 @@
 - **Compact:** Two props, Two methods, ready to use.
 - **Backdrop:** Touch Backdrop to close the botton sheet.
 - **Customize:** Customize events with `onSwipe` parameter that indicates swiping event.
+
 ## 🛠 Installation
 Open a Terminal in the project root and run:
 ```sh
