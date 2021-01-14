@@ -22,6 +22,8 @@ interface IState {
   lastSnap: number;
   isVisible: boolean;
   onSwipe: boolean;
+  _lastScrollY: Animated.Value;
+  _lastScrollYValue: number;
 }
 
 const windowHeight = Dimensions.get("window").height;
@@ -29,9 +31,6 @@ const windowHeight = Dimensions.get("window").height;
 // boolean 값 하나로 가능 (renderContent에 setBoolean 넘기고 modal visible은 내부 state로 애니매이션 후 설정)
 export default class BottomSheet extends Component<IProps, IState> {
   private SNAP_POINTS_FROM_TOP: number[];
-  private _backgroundOpacity: Animated.Value;
-  private _lastScrollYValue: number;
-  private _lastScrollY: Animated.Value;
   private _dragY: Animated.Value;
   private _onGestureEvent: (...args: any[]) => void;
   private _reverseLastScrollY: Animated.AnimatedMultiplication;
@@ -53,13 +52,17 @@ export default class BottomSheet extends Component<IProps, IState> {
       lastSnap: START,
       isVisible: false,
       onSwipe: false,
+      _lastScrollY: new Animated.Value(0),
+      _lastScrollYValue: 0,
     };
-    this._backgroundOpacity = new Animated.Value(0);
+    // this._backgroundOpacity = new Animated.Value(
+    //   windowHeight - this.props.visibleHeight,
+    // );
 
-    this._lastScrollYValue = 0;
-    this._lastScrollY = new Animated.Value(0);
-    this._lastScrollY.addListener(({ value }) => {
-      this._lastScrollYValue = value;
+    this.state._lastScrollY.addListener(({ value }) => {
+      this.setState({
+        _lastScrollYValue: value,
+      });
     });
 
     this._dragY = new Animated.Value(0);
@@ -72,7 +75,7 @@ export default class BottomSheet extends Component<IProps, IState> {
 
     this._reverseLastScrollY = Animated.multiply(
       new Animated.Value(-1),
-      this._lastScrollY
+      this.state._lastScrollY
     );
 
     this._translateYOffset = new Animated.Value(END);
@@ -85,9 +88,6 @@ export default class BottomSheet extends Component<IProps, IState> {
       outputRange: [START / 1.2, START, END],
       extrapolate: "clamp",
     });
-    this._translateY.addListener(({ value }: any) => {
-      this._backgroundOpacity.setValue(value);
-    });
 
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
@@ -99,7 +99,7 @@ export default class BottomSheet extends Component<IProps, IState> {
         onSwipe: true,
       });
       // this.props.onSwipeStart && this.props.onSwipeStart();
-      this._lastScrollY.setValue(0);
+      this.state._lastScrollY.setValue(0);
     } else if (nativeEvent.state === 5) {
       this.setState({
         onSwipe: false,
@@ -111,7 +111,7 @@ export default class BottomSheet extends Component<IProps, IState> {
   private _onHandlerStateChange = ({ nativeEvent }: any) => {
     if (nativeEvent.oldState === State.ACTIVE) {
       let { velocityY, translationY } = nativeEvent;
-      translationY -= this._lastScrollYValue;
+      translationY -= this.state._lastScrollYValue;
       const dragToss = 0.05;
       const endOffsetY =
         this.state.lastSnap + translationY + dragToss * velocityY * 2;
@@ -199,38 +199,38 @@ export default class BottomSheet extends Component<IProps, IState> {
             <Animated.View
               style={{
                 flex: 1,
-                backgroundColor: this._backgroundOpacity.interpolate({
+                backgroundColor: "#000000",
+                opacity: this._translateY.interpolate({
                   inputRange: [
                     windowHeight - this.props.visibleHeight,
                     windowHeight,
                   ],
-                  outputRange: ["#00000099", "#00000000"],
+                  outputRange: [0.5, 0],
                   extrapolate: "clamp",
                 }),
               }}
               pointerEvents="box-none"
-            >
-              <TouchableWithoutFeedback>
-                <Animated.View
-                  style={[
-                    StyleSheet.absoluteFillObject,
-                    {
-                      transform: [{ translateY: this._translateY }],
-                    },
-                  ]}
+            />
+            <TouchableWithoutFeedback>
+              <Animated.View
+                style={[
+                  StyleSheet.absoluteFillObject,
+                  {
+                    transform: [{ translateY: this._translateY }],
+                  },
+                ]}
+              >
+                <PanGestureHandler
+                  shouldCancelWhenOutside={false}
+                  onGestureEvent={this._onGestureEvent}
+                  onHandlerStateChange={this._onHeaderHandlerStateChange}
                 >
-                  <PanGestureHandler
-                    shouldCancelWhenOutside={false}
-                    onGestureEvent={this._onGestureEvent}
-                    onHandlerStateChange={this._onHeaderHandlerStateChange}
-                  >
-                    <Animated.View style={{ flex: 1 }}>
-                      {this.props.renderContent(this.state.onSwipe)}
-                    </Animated.View>
-                  </PanGestureHandler>
-                </Animated.View>
-              </TouchableWithoutFeedback>
-            </Animated.View>
+                  <Animated.View style={{ flex: 1 }}>
+                    {this.props.renderContent(this.state.onSwipe)}
+                  </Animated.View>
+                </PanGestureHandler>
+              </Animated.View>
+            </TouchableWithoutFeedback>
           </TouchableOpacity>
         </TapGestureHandler>
       </Modal>
