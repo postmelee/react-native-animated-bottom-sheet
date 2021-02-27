@@ -16,6 +16,7 @@ import {
 interface IProps {
   renderContent: (onSwipe: boolean) => any;
   visibleHeight: number;
+  onClose?: () => void;
 }
 
 interface IState {
@@ -28,7 +29,6 @@ interface IState {
 
 const windowHeight = Dimensions.get("window").height;
 
-// boolean 값 하나로 가능 (renderContent에 setBoolean 넘기고 modal visible은 내부 state로 애니매이션 후 설정)
 export default class BottomSheet extends Component<IProps, IState> {
   private SNAP_POINTS_FROM_TOP: number[];
   private _dragY: Animated.Value;
@@ -138,6 +138,7 @@ export default class BottomSheet extends Component<IProps, IState> {
           this.setState({
             isVisible: false,
           });
+          this.props.onClose && this.props.onClose();
         }
       });
     }
@@ -170,6 +171,7 @@ export default class BottomSheet extends Component<IProps, IState> {
       this.setState({
         isVisible: false,
       });
+      this.props.onClose && this.props.onClose();
     });
   };
 
@@ -184,17 +186,7 @@ export default class BottomSheet extends Component<IProps, IState> {
           <TouchableOpacity
             activeOpacity={1}
             style={{ flex: 1 }}
-            onPress={() => {
-              Animated.timing(this._translateYOffset, {
-                toValue: windowHeight,
-                duration: 200,
-                useNativeDriver: true,
-              }).start(() => {
-                this.setState({
-                  isVisible: false,
-                });
-              });
-            }}
+            onPress={() => this.close()}
           >
             <Animated.View
               style={{
