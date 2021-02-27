@@ -58,7 +58,9 @@ const App = () => {
             <BottomSheet 
             ref={bottomSheetRef}
             renderContent={renderBottomSheetContent}
-            visibleHeight={Dimensions.get('window').height/2}/>
+            visibleHeight={Dimensions.get('window').height/2}
+            onClose={() => console.log('bottomSheet closed!')}
+            />
         </View>
     )
 }
@@ -71,6 +73,7 @@ export default App
 |---|---|---|---|
 |renderContent|`(onSwipe: boolean) => any`|`true`|Function that returns child component to render. you can use `onSwipe` value to handle swipe event.|
 |visibleHeight|`number`|`true`|Value that defines height to show from end of the window.|
+|onClose|`() => void`|`false`|Function that will be invoked when after bottom sheet has closed.|
 
 ## 🪡 Methods
 ### `show(value?: number)`
@@ -82,7 +85,9 @@ export default App
 Closes the bottom sheet to bottom with Animation.
 
 ## ✏️  Todo
-- [ ] Add callback to `close`
+- [x] Add callback to `close`
+- [ ] Make it work when content is `ScrollView` or `FlatList`
+- [ ] Add `swipe-up` event handler to switch sheet to `full screen`
 
 ## ⚖️ License
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/postmelee/react-native-animated-bottom-sheet/blob/main/LICENSE) file for details
